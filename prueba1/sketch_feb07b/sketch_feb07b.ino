@@ -56,24 +56,99 @@ void loop() {
       {
         
         if(tiempo2 > (tiempo1)){
-          letra[columna][fila] = P[columna][fila];
+          letra[columna][fila] = ASTERISCO[columna][fila];
         }
        if (tiempo3 > (tiempo1+1000)){
-          letra[columna][fila] = R[columna][fila];
-          lc.setLed(0, columna, fila, P[fila][columna]);
+          letra[columna][fila] = P[columna][fila];
+          lc.setLed(0, columna, fila, ASTERISCO[fila][columna]);
           delay(1);
           //Serial.println(tiempo3);
         }
         
         if (tiempo3 > (tiempo1+2000)){
-          letra[columna][fila] = A[columna][fila];
+          letra[columna][fila] = UNO[columna][fila];
+          lc.setLed(0, columna, fila, P[fila][columna]);
+          delay(1);
+        }
+        if (tiempo3 > (tiempo1+3000)){
+          letra[columna][fila] = GUION[columna][fila];
+          lc.setLed(0, columna, fila, UNO[fila][columna]);
+          delay(1);
+        }
+        /*----------------------------------------------------------------*/
+        if (tiempo3 > (tiempo1+4000)){
+          letra[columna][fila] = G[columna][fila];
+          lc.setLed(0, columna, fila, GUION[fila][columna]);
+          delay(1);
+        }
+        if (tiempo3 > (tiempo1+5000)){
+          letra[columna][fila] = R[columna][fila];
+          lc.setLed(0, columna, fila, G[fila][columna]);
+          delay(1);
+        }
+        if (tiempo3 > (tiempo1+6000)){
+          letra[columna][fila] = U[columna][fila];
           lc.setLed(0, columna, fila, R[fila][columna]);
           delay(1);
         }
-
-
-        if (tiempo3 > (tiempo1+3000)){
+        if (tiempo3 > (tiempo1+7000)){
+          letra[columna][fila] = P[columna][fila];
+          lc.setLed(0, columna, fila, U[fila][columna]);
+          delay(1);
+        }
+        /*****/
+        if (tiempo3 > (tiempo1+8000)){
+          letra[columna][fila] = O[columna][fila];
+          lc.setLed(0, columna, fila, P[fila][columna]);
+          delay(1);
+        }
+        if (tiempo3 > (tiempo1+9000)){
+          letra[columna][fila] = CUATRO[columna][fila];
+          lc.setLed(0, columna, fila, O[fila][columna]);
+          delay(1);
+        }
+        if (tiempo3 > (tiempo1+10000)){
+          letra[columna][fila] = GUION[columna][fila];
+          lc.setLed(0, columna, fila, CUATRO[fila][columna]);
+          delay(1);
+        }
+        if (tiempo3 > (tiempo1+11000)){
+          letra[columna][fila] = S[columna][fila];
+          lc.setLed(0, columna, fila, GUION[fila][columna]);
+          delay(1);
+        }
+        if (tiempo3 > (tiempo1+12000)){
+          letra[columna][fila] = E[columna][fila];
+          lc.setLed(0, columna, fila, S[fila][columna]);
+          delay(1);
+        }
+        if (tiempo3 > (tiempo1+13000)){
           letra[columna][fila] = C[columna][fila];
+          lc.setLed(0, columna, fila, E[fila][columna]);
+          delay(1);
+        }
+        if (tiempo3 > (tiempo1+14000)){
+          letra[columna][fila] = C[columna][fila];
+          lc.setLed(0, columna, fila, C[fila][columna]);
+          delay(1);
+        }
+        if (tiempo3 > (tiempo1+15000)){
+          letra[columna][fila] = I[columna][fila];
+          lc.setLed(0, columna, fila, C[fila][columna]);
+          delay(1);
+        }
+        if (tiempo3 > (tiempo1+16000)){
+          letra[columna][fila] = O[columna][fila];
+          lc.setLed(0, columna, fila, I[fila][columna]);
+          delay(1);
+        }
+        if (tiempo3 > (tiempo1+17000)){
+          letra[columna][fila] = N[columna][fila];
+          lc.setLed(0, columna, fila, O[fila][columna]);
+          delay(1);
+        }
+        if (tiempo3 > (tiempo1+18000)){
+          letra[columna][fila] = ASTERISCO[columna][fila];
           lc.setLed(0, columna, fila, A[fila][columna]);
           delay(1);
         }
