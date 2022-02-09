@@ -2,12 +2,19 @@
 #include <LedControl.h>
 #include "letras.h"
 
+// MOSTRAR ARRIBA ABAJO Y MOSTRA ABAJO ARRIBA MENSAJE INICIAL
+// VELOCIDAD CON POTENCIOMETRO
+// CONTADOR DE PUNTAJE 
+// LA PAUSA SHUTDOWN 
+// UTILIZAR 2DA MATRIZ
 
+//analogRead(a2)
 //Declaracion de variables
 unsigned long tiempo1 = 0;
 unsigned long tiempo2 = 0;
 unsigned long tiempo3 = 0;
-
+int potenciometro=A2;
+int velocidad=0;
 //salidas de arduino MEGA 51, 52, 53 video
 //DNI, CLK, LOAD
 //salidas de arduino UNO 11, 13, 10 video 
@@ -48,7 +55,8 @@ void setup() {
 void loop() {
     tiempo2 = millis();
     tiempo3 = millis();
-    
+    velocidad=(potenciometro);
+
     //probamos la matriz
     for(int fila = 0; fila < 8; fila++){
       digitalWrite(filas[fila], HIGH);
@@ -159,6 +167,8 @@ void loop() {
     LimpiarMatriz();
     }
 }
+//MANIPULACION DE LA VELOCIDAD GRACIAS AL POTENCIOMETRO
+
 
 void LimpiarMatriz(){
   for(int i = 0; i < 8; i++){
@@ -166,6 +176,14 @@ void LimpiarMatriz(){
     digitalWrite(columnas[i], HIGH);
   }
 }
+void  Pausa(){
+  lc.shutdown(0, true);
+  
+  //apaga
+  
+}
+void Adelante(){}
+void Atras(){}
 
 void Encender(){
 
