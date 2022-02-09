@@ -42,6 +42,8 @@ int BotonIzq = A2;
 int BotonDer = A3;
 
 // Matriz de led
+
+
 byte MatrizLimpia[8] = {
   B00000000,
   B00000000,
@@ -53,6 +55,7 @@ byte MatrizLimpia[8] = {
   B00000000,
 };
 
+/*
 // Rockets
 const int MAX_NUMBER_OF_ROCKETS = 20;
 const int ALL_ROCKETS_HAVE_BEEN_USED = -1;
@@ -180,7 +183,7 @@ void Nave::moverDer() {
 }
 
 Nave Nave;
-
+*/
 // Meteor
 const int MAX_NUMBER_OF_METEORS = 64;
 const int ALL_MOTEORS_HAVE_BEEN_USED = -1;
