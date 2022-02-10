@@ -1,13 +1,34 @@
 #include <LedControl.h>
 #include <Arduino.h>
+#include "numeros.h"
 
+
+int columnas[] = {22, 23, 24, 25, 26, 27, 28, 29};
+int filas[] = {32,33,34,35,36,37,38,39};
 LedControl lc=LedControl(51,52,53,1);
 int btnDisparo = A0;
+int BotonPausa=A1;
 int btnIzq = A2;
 int btnDer = A3;
+int unidad=1;
+int decena=1;
+
+
 bool GAME_OVER = true;
 byte cuadriculaLimpia[16] = {};
 const int VELOCIDAD_JUEGO = 5;
+
+int molde[][8]={
+  {0,0,0,0,0,0,0,0},
+  {0,0,0,0,0,0,0,0},
+  {0,0,0,0,0,0,0,0},
+  {0,0,0,0,0,0,0,0},
+  {0,0,0,0,0,0,0,0},
+  {0,0,0,0,0,0,0,0},
+  {0,0,0,0,0,0,0,0},
+  {0,0,0,0,0,0,0,0}
+};
+
 
 // PROYECTIL -----------------------------------------------------------------------------
 const int MAX_NUMERO_DE_PROYECTILES = 20;
@@ -231,7 +252,10 @@ void setup() {
 }
 
 void loop() {
-  if (!GAME_OVER) {
+   Serial.println(analogRead(BotonPausa));
+  //lc.shutdown(0, false);
+  if(analogRead(BotonPausa)==0){
+          if (!GAME_OVER) {
     if (estaPresionado(btnIzq) && nave.puedeMovIzq()) {
       nave.moverseIzq();
     }
@@ -242,6 +266,13 @@ void loop() {
     
     if (estaPresionado(btnDisparo) && nave.puedeDisparar()) {
       nave.disparar();
+      unidad++;
+      if(unidad==9){
+        decena++;
+        unidad=0;
+      }
+      //Serial.println("Puntaje:");
+      //Serial.println(unidad);
     }
     /*
     if (random(10) < 3) {
@@ -264,4 +295,73 @@ void loop() {
     }
     delay(250);
   }
+    
+  } else{
+      
+        imprimir_conteo();
+        imprimir_sindriver_conteo();
+      
+   }
+  
+
+
+  
+  
+}
+
+
+
+
+void imprimir_sindriver_conteo(){
+  for(int columna = 0; columna < 8; columna++){
+      //digitalWrite(filas[columna],HIGH);
+      for(int fila=0; fila < 8; fila++){
+      if(molde[columna][fila] == 1){digitalWrite(columnas[fila],LOW);}}
+      delay(4);
+      digitalWrite(filas[columna],LOW);
+      for(int j = 0; j < 8;j++){ digitalWrite(columnas[j],HIGH); }}
+}
+
+
+void imprimir_conteo(){
+     for(int fila = 0; fila < 8; fila++){
+      digitalWrite(filas[fila], HIGH);
+      for(int columna = 0; columna < 8; columna++){
+   if(decena==1){ molde[columna][fila] = m1[columna][fila];  }
+   
+     if(decena==2){  molde[columna][fila] = m2[columna][fila];  }
+
+     if(decena==3){  molde[columna][fila] = m3[columna][fila];   }
+     if(decena==4){ molde[columna][fila] = m4[columna][fila];  }
+
+     if(decena==5){   molde[columna][fila] = m5[columna][fila];  }
+
+     if(decena==6){ molde[columna][fila] = m6[columna][fila]; }
+
+     if(decena==7){ molde[columna][fila] = m7[columna][fila];  }
+
+     if(decena==8){ molde[columna][fila] = m8[columna][fila];  }
+
+     if(decena==9){  molde[columna][fila] = m9[columna][fila];  }
+
+     if(decena==0){molde[columna][fila] = m0[columna][fila];}
+
+     if(unidad==0){lc.setLed(0, fila, columna, n0[columna][fila]);}
+     if(unidad==1){lc.setLed(0, fila, columna, n1[columna][fila]);}
+     if(unidad==2){lc.setLed(0, fila, columna, n2[columna][fila]);}
+     if(unidad==3){lc.setLed(0, fila, columna, n3[columna][fila]);}
+     if(unidad==4){lc.setLed(0, fila, columna, n4[columna][fila]);}
+     if(unidad==5){lc.setLed(0, fila, columna, n5[columna][fila]);}
+     if(unidad==6){lc.setLed(0, fila, columna, n6[columna][fila]);}
+     if(unidad==7){lc.setLed(0, fila, columna, n7[columna][fila]);}
+     if(unidad==8){lc.setLed(0, fila, columna, n8[columna][fila]);}
+     if(unidad==9){lc.setLed(0, fila, columna, n9[columna][fila]);}
+      }
+      }
+
+      
+
+
+      
+  
 }
