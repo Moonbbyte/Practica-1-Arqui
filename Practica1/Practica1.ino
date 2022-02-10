@@ -40,6 +40,7 @@ int startNewGameMessage[15][8]={
 int FireButton= A0;
 int BotonIzq = A2;
 int BotonDer = A3;
+int BotonPausa=A1;
 
 // Matriz de led
 byte MatrizLimpia[8] = {
@@ -400,6 +401,15 @@ void setup() {
 }
 
 void loop() {
+  Serial.println(analogRead(BotonPausa));
+  //lc.shutdown(0, false);
+  if(analogRead(BotonPausa)==0){
+     lc.shutdown(0, false);
+    }else{
+      lc.shutdown(0, true);
+   }
+    
+    
   if (!GAME_OVER) {
     if (isButtonPressed(BotonIzq) && Nave.puedeMoverseIzq()) {
       Nave.moverIzq();

@@ -282,6 +282,7 @@ byte asterisco_abajo_24[16] = {
 
 
 void setup() {
+  
   // Inicializando los pines como salidas
   // Filas
   for (int i = 22; i < 30; i++) {
@@ -296,7 +297,7 @@ void setup() {
   lc.shutdown(0, false); // Activando la matriz
   lc.setIntensity(0, 4); // Estableciendo la intensidad en la matriz 
   lc.clearDisplay(0); // "Limpiando" toda la matriz
-
+  
 }
 
 void loop() {
@@ -385,5 +386,7 @@ void mostrarAsteriscoConFor(int asterisco[8][8]){
 void mostrarAsteriscoConLibreria(byte asterisco[16]) {
   for (int i = 0; i < 8; i++) {
     lc.setRow(0, i, asterisco[i]);
+    
   }
+  
 }
