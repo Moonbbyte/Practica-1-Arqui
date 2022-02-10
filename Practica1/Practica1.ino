@@ -257,10 +257,10 @@ void createMeteor() {
 }
 
 // Game
-byte currentGrid[8] = {};
+//byte currentGrid[8] = {};
 byte meteorGrid[8] = {};
-int gameSpeed = 500;
-
+//int gameSpeed = 500;
+/*
 void drawGrid(byte * grid) {
   for (int row = 0; row < 8; row++) {
     lc.setColumn(0, row, grid[row]);
@@ -271,7 +271,7 @@ void drawNave(int coord) {
   int shift = coord - 1;
   currentGrid[1] = B01000000 >> shift;
   currentGrid[0] = B11100000 >> shift;
-}
+}*/
 
 void drawRockets() {
   Rocket rocket;
@@ -311,11 +311,12 @@ void drawMeteors() {
   }
 }
 
+/*
 bool isButtonPressed(int buttonID) {
   int buttonState = digitalRead(buttonID);
   return buttonState == HIGH;
 }
-
+*/
 
 void blinkScreen(int nTimes) {
   for (int i = 0; i < nTimes; i++) {

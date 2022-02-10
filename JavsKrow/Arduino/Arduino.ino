@@ -2,6 +2,12 @@
 #include <Arduino.h>
 
 LedControl lc=LedControl(51,52,53,1);
+int btnDisparo = A0;
+int btnIzq = A2;
+int btnDer = A3;
+bool GAME_OVER = true;
+byte cuadriculaLimpia[16] = {};
+const int VELOCIDAD_JUEGO = 5;
 
 // PROYECTIL -----------------------------------------------------------------------------
 const int MAX_NUMERO_DE_PROYECTILES = 20;
@@ -110,25 +116,8 @@ Nave nave;
 
 
 // JUEGO ------------------------------------------------------------------------------------
-byte cuadriculaActual[16] = {
-  B10000000,// 0
-  B01000000,// 1
-  B00100000,// 2
-  B00010000,// 3
-  B00001000,// 4
-  B00000100,// 5
-  B00000010,// 6
-  B00000001,// 7
-  B00000010,// 8
-  B00000100,// 9
-  B00001000,// 10
-  B00010000,// 11
-  B00100000,// 12
-  B01000000,// 13
-  B10000000,// 14
-  B01000000,// 15
-};
-int velJuego = 500;
+byte cuadriculaActual[16] = {};
+
 
 void dibujarCuadricula(byte * cuadricula){
   int contadorM2 = 7;
@@ -142,9 +131,9 @@ void dibujarCuadricula(byte * cuadricula){
           digitalWrite(j + 22,LOW);
         }else{
           digitalWrite(j + 22,HIGH);
-        }
+        }        
       }
-      delay(1);
+      delay(VELOCIDAD_JUEGO);
       digitalWrite(i + 32, LOW);
       for (int j = 22; j<30; j++){
         digitalWrite(j, HIGH);
@@ -152,64 +141,127 @@ void dibujarCuadricula(byte * cuadricula){
       
     }else{
         lc.setColumn(0, contadorM2, cuadricula[i]);
-        delay(1);
+        delay(VELOCIDAD_JUEGO);
         //lc.setColumn(0, contadorM2, B00000000);
         contadorM2--;
     }
   }
 }
 
+void dibujarNave(int coord){
+  cuadriculaActual[14] = B01000000 >> coord - 1;
+  cuadriculaActual[15] = B11100000 >> coord - 1;
+}
 
-
-
-
-
-
-
-
-
-
-
-
-/*
-//ESTE ARRAY ES PARA LIMPIAR MATRIZ
-const byte MATRIZ1_NONE []= { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }; 
-*/
-//FUNCIÓN PARA LIMPIAR MATRIZ-TODOS LOS LEDS APAGADOS
-void limpiarMatriz1() { 
-  for (int i=22; i<30; i++){
-    digitalWrite(i, HIGH);
-  }
-    for (int j= 32 ; j<40 ; j++){
-      digitalWrite(j, LOW);
+void dibujarProyectiles(){
+  Proyectil proyectil;
+  for (int idProyectil = 0; idProyectil < MAX_NUMERO_DE_PROYECTILES; idProyectil++){
+    proyectil = proyectilesActivos[idProyectil];
+    if(!esProyectilNulo(proyectil)){
+      if(proyectil.coordY < 8){
+        lc.setLed(0, proyectil.coordX, proyectil.coordY, true);  
+      }else {
+        byte arregloTemp[16] = {};
+        memcpy(arregloTemp, cuadriculaActual, 16);
+        arregloTemp[15-proyectil.coordY] = B10000000 >> proyectil.coordX;
+        dibujarCuadricula(arregloTemp);
+        /*
+        for (int i = 0; i < 8; i++){
+          if(i == (proyectil.coordY-8)){
+            digitalWrite(32+i, HIGH);
+            for (int j = 7; j >= 0; j--){
+              if(j == proyectil.coordX-j){
+                digitalWrite(j + 22, LOW);
+              }
+            }
+            delay(VELOCIDAD_JUEGO);
+            digitalWrite(32+i, LOW);
+            for (int j = 22; j<30; j++){
+              digitalWrite(j, HIGH);
+            }
+          }      
+        }*/
+      }      
+      if(proyectil.coordY < 16){
+        proyectilesActivos[idProyectil].coordY += 1;
+        proyectilesActivos[idProyectil].tiempoActualizacion += millis();          
+      }else {
+        eliminarProyectil(idProyectil);
+      }
     }
-} 
+  }
+}
 
+bool estaPresionado(int idBtn){
+  int estadoBtn = digitalRead(idBtn);
+  return (estadoBtn == HIGH);
+}
+
+void reiniciarJuego(){
+  GAME_OVER = true;
+  dibujarCuadricula(cuadriculaLimpia);
+  // Nave
+  nave.coordX = 3;
+  nave.velMov = 50;
+  nave.velDisparo = 200;
+  // Proyectiles
+  for (int idProyectil = 0; idProyectil < MAX_NUMERO_DE_PROYECTILES; idProyectil++){
+    eliminarProyectil(idProyectil);    
+  }  
+}
+
+// SETUP ------------------------------------------------------------------------------------
 void setup() {
-  // put your setup code here, to run once:
+  Serial.begin(9600); 
+  
+  // Pines Matriz 1
   for (int i=22; i<30; i++){ 
     pinMode(i, OUTPUT); 
   }
   for (int i=32; i<40; i++){
     pinMode(i, OUTPUT); 
   }
-  Serial.begin(9600); 
-  lc.shutdown(0, false);  // turn off power saving, enables display
-  lc.setIntensity(0, 15);  // sets brightness (0~15 possible values)
-  lc.clearDisplay(0);  // clear screen
+
+  // Driver Matriz 2
+  lc.shutdown(0, false);  
+  lc.setIntensity(0, 15); 
+  lc.clearDisplay(0);
+
+  reiniciarJuego();
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-  limpiarMatriz1();
-  dibujarCuadricula(cuadriculaActual);
-}
+  if (!GAME_OVER) {
+    if (estaPresionado(btnIzq) && nave.puedeMovIzq()) {
+      nave.moverseIzq();
+    }
+  
+    if (estaPresionado(btnDer) && nave.puedeMovDer()) {
+      nave.moverseDer();
+    }
+    
+    if (estaPresionado(btnDisparo) && nave.puedeDisparar()) {
+      nave.disparar();
+    }
+    /*
+    if (random(10) < 3) {
+      createMeteor();
+    }*/
+  
+    memcpy(cuadriculaActual, cuadriculaLimpia, 16);
 
-/*
-//FUNCIÓN PARA CONVETIR HEXADECIMAL A BINARIO
-bool getBit( byte N, int pos) {
-  int b = N >> pos ; 
-  b = b & 1 ; 
-  return b ; 
-} 
-*/
+    dibujarNave(nave.coordX);
+    dibujarCuadricula(cuadriculaActual);
+    dibujarProyectiles();
+    //drawMeteors();
+  
+    //checkIfMeteorTouchedNave();
+    //checkIfNaveHitMeteor();
+
+  } else {
+    if (estaPresionado(btnIzq) || estaPresionado(btnDer)  || estaPresionado(btnDisparo)) {
+      GAME_OVER = false;
+    }
+    delay(250);
+  }
+}
